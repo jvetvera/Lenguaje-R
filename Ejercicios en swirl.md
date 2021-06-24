@@ -11,6 +11,9 @@
   - [Operador `:`](#operador-)
   - [Función `seq()`](#función-seq)
   - [Uso de la función replicar para crear una secuencia de números `rep()`](#uso-de-la-función-replicar-para-crear-una-secuencia-de-números-rep)
+- [Vectores](#vectores-1)
+  - [Vectores atómicos](#vectores-atómicos)
+    - [Vectores lógicos](#vectores-lógicos)
 
 # Bloques básicos
 
@@ -287,3 +290,50 @@ Para ahora hacer que se repita cada número del vector `c(0, 1, 2)`10 veces, hac
 > rep(c(0, 1, 2), each = 10)
  [1] 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 
 ```
+
+# Vectores
+
+La estructura de dato más sencilla en R se llama **vector**. Los vectores pueden representarse de 2 maneras en R:
+
+1. Atómicos: Solamente contienen un tipo o clase objeto. 
+2. Listas: Contiene múltiples tipos de datos. 
+
+## Vectores atómicos
+
+Los vectores atómicos se clasifican en R de la siguiente manera:
+
+- Numéricos: Vectores que contienen números que usan decimales. 
+- Integrales: Vectores que contienen números que son enteros.
+- Lógicos: Contienen los valores `FALSE`, `TRUE` ó `NA`, se generan como resultado de condiciones lógicas.
+- Complejos
+- Carácter: Vectores que contienen letras y con comillas `" "`.
+
+### Vectores lógicos
+
+Para entender como funcionen los vectores lógicos vamos a generar un vector numérico:
+
+```
+> num_vect <- c(0.5, 55, -10, 6)
+```
+
+Posteriormente se creará la variable `tf`que contenga el resultado de la condición lógica `num_vect < 1`, es decir si alguno de los números almacenados en ese vector son menores a 1:
+
+```
+> tf <- num_vect < 1
+> tf
+[1]  TRUE FALSE  TRUE FALSE
+```
+
+Por lo tanto `tf`es un vector lógico de longitud 4, con los valores `TRUE FALSE  TRUE FALSE`.
+
+Otra manera es ver si algún valor del vector es mayor o igual a 6 de la siguiente manera:
+
+```
+> num_vect >= 6
+[1] FALSE  TRUE FALSE  TRUE
+```
+Los operadores lógicos con los que se pueden realizar esas operaciones condicionales son: `<`, `>=`, `>`, `<=`, `==` (para igualdad exacta) y `!=` (para desigualdades).
+
+Para dos expresiones lógicas, A y B, se puede preguntar **si una es verdadera** con `A | B` (lógica 'o' a.k.a 'unión') ó **si ambas son verdaderas** con `A & B` (lógica 'y' a.k.a 'intersección'). La negación de A es `!A` y es verdadera cuando A es `FALSE` y es falsa cuando A `TRUE`.
+
+> El símbolo de `!`niega todo lo que viene después de el.
