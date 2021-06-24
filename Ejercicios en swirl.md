@@ -7,6 +7,10 @@
 - [Workspace y Archivos](#workspace-y-archivos)
   - [Espacio de trabajo](#espacio-de-trabajo)
   - [Archivos](#archivos)
+- [Creación de secuencias numéricas](#creación-de-secuencias-numéricas)
+  - [Operador `:`](#operador-)
+  - [Función `seq()`](#función-seq)
+  - [Uso de la función replicar para crear una secuencia de números `rep()`](#uso-de-la-función-replicar-para-crear-una-secuencia-de-números-rep)
 
 # Bloques básicos
 
@@ -170,3 +174,116 @@ Para poder crear directorios anidados con la función `dir.create()`es necesario
 > dir.create(file.path('testdir2','testdir3'), recursive = TRUE)
 ```
 
+Regresar a nuestro primer directorio de trabajo basta con poner el siguiente código de la ruta almacenada previamente en `old.dir`:
+
+```
+> setwd(old.dir)
+```
+
+# Creación de secuencias numéricas
+
+## Operador `:`
+
+La forma sencilla de crear una secuencia de números en R es con el símbolo `:`, por ejemplo para crear una secuencia del 1 al 20:
+
+```
+> 1:20
+ [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+```
+
+Los números que se obtienen son **integrales**, una clasificación de datos para R. 
+
+Si lo que se quiere es obtener una secuencia de números **reales** se puede realizar de la siguiente forma integrando un número que tiene decimales `pi:10`:
+
+```
+> pi:10
+[1] 3.141593 4.141593 5.141593 6.141593 7.141593 8.141593 9.141593
+```
+Debido a que el límite superior es 10 y el siguiente número será mayor a 10, la secuencia se detiene en el 9.
+
+También se pueden obtener secuencias de regreso o en disminución, por ejemplo `15:1`sería:
+
+```
+> 15:1
+ [1] 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1
+```
+Para **dudas** en caso de algunas funciones de operadores se puede utilizar el comando de la siguiente manera:
+
+```
+> ?`:`
+```
+
+## Función `seq()`
+
+En su función más básica nos permite realizar las mismas funciones que `:`
+
+```
+> seq(1, 20)
+ [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+```
+
+Por otro lado, si lo que queremos es una secuencia de números del 1 al 10 pero que sea en una frecuencia de 0.5 se utilizaría de la siguiente manera:
+
+```
+> seq(0, 10, by = 0.5)
+ [1]  0.0  0.5  1.0  1.5  2.0  2.5  3.0  3.5  4.0  4.5  5.0  5.5  6.0  6.5  7.0
+[16]  7.5  8.0  8.5  9.0  9.5 10.0
+```
+
+También se le puede pedir a la función que haga una secuencia de números del 1 al 10, pero con una secuencia de 30 números hasta llegar al 10: 
+
+```
+> my_seq <- seq(5, 10, length = 30)
+```
+
+En este caso lo almacenamos en la variable my_seq.
+
+Para comprobar el largo del objeto podemos utilizar la función de `length`:
+
+```
+> length(my_seq)
+[1] 30
+```
+
+Ahora que se conoce que el largo del objeto "my_seq" es de 30, podemos usarlo para generar secuencias que lleguen hasta 30 de distintas formas. 
+
+1. Usando el comando `:`y la función `lenght()`: 
+```
+> 1:length(my_seq)
+ [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27
+[28] 28 29 30
+```
+2. Usando la función `seq()` con el argumento `along.with`:
+```
+> seq(along.with = my_seq)
+ [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27
+[28] 28 29 30
+```
+3. La más sencilla es usando la función `seq_along()`:
+```
+> seq_along(my_seq)
+ [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27
+[28] 28 29 30
+```
+## Uso de la función replicar para crear una secuencia de números `rep()`
+
+En caso de que se desee repetir un número una cantidad determinada de veces se usa la función `rep()`con el argumento `times =`de la siguiente forma:
+
+```
+> rep(0, times = 40)
+ [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+```
+
+Si en lugar de eso queremos que nuestro vector tenga 10 repeticiones del vector `c(0, 1, 2)`, se hace de la siguiente forma:
+
+```
+> rep(c(0, 1, 2), times = 10)
+ [1] 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2
+```
+
+Para ahora hacer que se repita cada número del vector `c(0, 1, 2)`10 veces, hacemos lo siguiente:
+
+```
+> rep(c(0, 1, 2), each = 10)
+ [1] 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 
+```
