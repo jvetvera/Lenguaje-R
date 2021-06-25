@@ -1,6 +1,6 @@
-# Inicio
+# Indice
 
-- [Inicio](#inicio)
+- [Indice](#indice)
 - [Bloques básicos](#bloques-básicos)
   - [Vectores](#vectores)
   - [Obtener ayuda](#obtener-ayuda)
@@ -17,6 +17,14 @@
     - [Vectores de de carácter](#vectores-de-de-carácter)
 - [Valores ausentes](#valores-ausentes)
   - [Valores NaN](#valores-nan)
+- [Subsetting de valores con vectores índice](#subsetting-de-valores-con-vectores-índice)
+  - [Vectores índice lógicos](#vectores-índice-lógicos)
+    - [Extracción de valores que no son NA](#extracción-de-valores-que-no-son-na)
+  - [Vectores índice lógicos](#vectores-índice-lógicos-1)
+  - [Vectores índice integrales positivos](#vectores-índice-integrales-positivos)
+  - [Vectores integrales negativos](#vectores-integrales-negativos)
+  - [Vectores índice de secuencias de carácteres](#vectores-índice-de-secuencias-de-carácteres)
+- [Matrices y Data Frames](#matrices-y-data-frames)
 
 # Bloques básicos
 
@@ -455,3 +463,173 @@ Otro ejemplo es que para R `Inf`representa un valor infinito, si hacemos la dife
 > Inf - Inf
 [1] NaN
 ```
+
+# Subsetting de valores con vectores índice
+
+En el caso de R, **subsetting** se refiere a la extracción de valores específicos de un vector dependiendo de algunas condiciones. 
+
+Supongamos que tenemos el siguiente vector con 20 números y 20 NA:
+
+```R
+> x
+ [1]          NA  1.35954896          NA -0.81664922 -0.85922400          NA
+ [7] -2.45294623          NA          NA  0.07564971          NA          NA
+[13]          NA -0.82627086  0.45857193 -0.74819678  0.65014088          NA
+[19]          NA -0.62306322          NA          NA          NA          NA
+[25]          NA          NA  0.10665745 -0.02834942 -1.72736205          NA
+[31]  0.15754476          NA -1.13329540          NA -1.03587386  1.39174943
+[37]  0.75355579          NA -1.05937151  0.13258668
+```
+
+La manera de decirle a R que queremos solamente una porción de datos del vector (subset), es colocando `[ ]` inmediatamente después del vector, con el rango que nos interesa, dendo de los corchetes se coloca el rango de números `[num:num]` que se llama **vector índice**.
+
+Para extraer los primeros 10 elementos del vector x podemos usar `x[1:10]`:
+
+```R
+> x[1:10]
+ [1]          NA  1.35954896          NA -0.81664922 -0.85922400          NA
+ [7] -2.45294623          NA          NA  0.07564971
+```
+
+Existen 4 tipos de vectores índice:
+
+- Vectores lógicos
+- Vectores de integrales positivos
+- Vectores de integrales negativos
+- Vectores de secuencias de caracteres
+
+## Vectores índice lógicos 
+
+### Extracción de valores que no son NA
+Cuando se trabaja con bases de datos reales es frecuente encontrar que trabajan con valores `NA` y lo que se quiere es extraer todos los elementos de la base de datos que no sean `NA`. Usar `is.na()`nos da un vector con los valores `TRUE (NA)` ó `FALSE (no es NA)` del largo del vector que se coloque en el paréntesis.
+
+Usar `is.na()` en un subsetting de un vector particular de ínteres, genera otro vector con el largo de números `NA` que tenga. Por ejemplo, para extraer solamente los `NA`del vector `x`:
+
+```R
+> x[is.na(x)]
+ [1] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA
+```
+
+Recordando que el operador lógico `!` es la negación de una expresión lógica, podemos decir que `!is.na()` buscará los valores que **no** sean `NA`. Por lo que para crear un vector que contenga solamente los valores que no son `NA` del vector `x`usamos:
+
+```R
+> y <- x[!is.na(x)]
+> y
+ [1]  1.35954896 -0.81664922 -0.85922400 -2.45294623  0.07564971 -0.82627086
+ [7]  0.45857193 -0.74819678  0.65014088 -0.62306322  0.10665745 -0.02834942
+[13] -1.72736205  0.15754476 -1.13329540 -1.03587386  1.39174943  0.75355579
+[19] -1.05937151  0.13258668
+```
+
+## Vectores índice lógicos
+
+Tenemos el vector `y`con algunos valores de los cuáles queremos extraer algunos que sigan una condición lógica. En este caso será `y > 0`. Si lo hicieramos solamente así nos regresaría un vector del largo de `y` con `TRUE` y `FALSE` el número de veces que un valor sea mayor o menor a 0. 
+
+Por otro lado, como en el caso anterior si usamos `y[y > 0]`, nos regresará un vector con contiene todos los valores positivos y por lo tanto `> 0`:
+
+```R
+> y[y > 0]
+[1] 1.35954896 0.07564971 0.45857193 0.65014088 0.10665745 0.15754476 1.39174943
+[8] 0.75355579 0.13258668
+```
+
+Es importante recordar que usar operadores lógicos con un vector que contiene `NA`, regresará un vector con los `NA`, por lo que es mejor primero remover los `NA` del vector` antes de usar el operador lógico:
+
+```R
+> x[x > 0]
+ [1]         NA 1.35954896         NA         NA         NA         NA 0.07564971
+ [8]         NA         NA         NA 0.45857193 0.65014088         NA         NA
+[15]         NA         NA         NA         NA         NA         NA 0.10665745
+[22]         NA 0.15754476         NA         NA 1.39174943 0.75355579         NA
+[29] 0.13258668
+```
+
+Debido a que `NA`no es un valor, si no una etiqueta para un valor ausente, nos regresa los números mayores a 0 y los `NA`.
+
+Así regresando al vector de `x`si queremos pedirle que nos regrese un vector de valores que no sean NA y mayores a 0 podemos hacer lo siguiente combinando los operadores que hemos usado:
+
+```R
+> x[!is.na(x) & x > 0]
+[1] 1.35954896 0.07564971 0.45857193 0.65014088 0.10665745 0.15754476 1.39174943
+[8] 0.75355579 0.13258668
+```
+
+## Vectores índice integrales positivos
+
+Así como se usa la secuencia `x[1:10]`para extraer los primeros 10 valores del vector `x`, podemos pedir que se extraigan solamente ciertos valores, por ejemplo el `3, 5 y 7`. Lo hacemos creando el vector `c(3, 5, 7)` y aplicándoselo a `x` con el operador para hacer subsetting `[ ]`:
+
+```R
+> x[c(3, 5, 7)]
+[1]        NA -0.859224 -2.452946
+```
+
+## Vectores integrales negativos
+
+Si queremos extraer todos los elementos del vector `x` pero no  el `2`y `10` podemos usar un vector integrales negativos, en este caso `c(-2, -10)`que lo pondríamos dentro del operador para hacer subsetting `[ ]`:
+
+```R
+> x[c(-2, -10)]
+ [1]          NA          NA -0.81664922 -0.85922400          NA -2.45294623
+ [7]          NA          NA          NA          NA          NA -0.82627086
+[13]  0.45857193 -0.74819678  0.65014088          NA          NA -0.62306322
+[19]          NA          NA          NA          NA          NA          NA
+[25]  0.10665745 -0.02834942 -1.72736205          NA  0.15754476          NA
+[31] -1.13329540          NA -1.03587386  1.39174943  0.75355579          NA
+[37] -1.05937151  0.13258668
+```
+
+Si se va a usar un vector con varios integrales negativos podemos poner el `-`antes de `c()`de la siguiente manera `x[-c(2, 10)]`. 
+
+## Vectores índice de secuencias de carácteres
+
+Estos se usan cuando los vectores tienen elementos con **nombre**, por ejemplo vamos a hacer un vector que tiene valores unidos a unos nombres:
+
+```R
+> vect <- c(foo = 11, bar = 2, norf = NA)
+```
+
+Podemos ver al imprimir `vect` que cada elemento tiene un nombre:
+
+```R
+> vect
+ foo  bar norf 
+  11    2   NA 
+```
+
+Para obtener solamente los nombres del vector `vect`usamos la función `names()`:
+
+```R
+> names(vect)
+[1] "foo"  "bar"  "norf"
+```
+
+También podemos crear un vector sin nombre `> vect2 <- c(11, 2, NA)` y después añadirle el nombre a sus elementos con la función `names()`:
+
+```R
+> names(vect2) <- c("foo", "bar", "norf")
+```
+
+Podemos ver si ambos vectores son iguales con la función `identical()`:
+
+```R
+> identical(vect, vect2)
+[1] TRUE
+```
+
+Ahora que los elementos de los vectores `x`y `y`están asociados a nombres, podemos hacer un subsetting por carácteres en el que pidamos un determinado valor dentro del vector. Por ejemplo para pedir el elemento que se llama `bar`:
+
+```R
+> vect["bar"]
+bar 
+  2 
+```
+
+También podemos pedirle con un vector de nombres:
+
+```R
+> vect[c("foo", "bar")]
+foo bar 
+ 11   2 
+```
+
+# Matrices y Data Frames
