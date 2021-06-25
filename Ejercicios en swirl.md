@@ -25,6 +25,8 @@
   - [Vectores integrales negativos](#vectores-integrales-negativos)
   - [Vectores índice de secuencias de carácteres](#vectores-índice-de-secuencias-de-carácteres)
 - [Matrices y Data Frames](#matrices-y-data-frames)
+  - [Creación de una matriz con `matrix()`](#creación-de-una-matriz-con-matrix)
+  - [Creación de un data frame con `data.frame()`](#creación-de-un-data-frame-con-dataframe)
 
 # Bloques básicos
 
@@ -633,3 +635,156 @@ foo bar
 ```
 
 # Matrices y Data Frames
+
+Las matrices y los data frames son tipos de datos con forma **rectangular**, lo que quiere decir que trabajan con datos tabulares con filas y columnas.
+
+La principal diferencia entre una matriz y un data frame es que la matriz solamente puede almacenar una clase de dato, mientras que el data frame puede manejar datos de distintas clases.
+
+Comenzaremos creando un vector de largo `1:20` de la siguiente forma:
+
+```R
+> my_vector <- 1:20
+> my_vector
+ [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+```
+
+Debido a que es solamente un vector, este no tiene una dimensión que pueda verse con la función `dim()`, pero sí podemos ver su largo con la función `length()`:
+
+```R
+> length(my_vector)
+[1] 20
+```
+
+A este vector de largo 20 le podemos dar una dimensión con la función `dim()`, lo que que tenemos que hacer es asigarle el vector de la dimensión que queramos con `c()`, dónde el primer valor dentro de los paréntesis sera la fila y el segundo la columna:
+
+> Dimensión se refiere a filas y columnas
+
+```R
+> dim(my_vector) <- c(4, 5)
+```
+Comprobamos su dimensión:
+
+```R
+> dim(my_vector)
+[1] 4 5
+```
+
+Lo mismo se puede lograr con la función de `attributes()` en el vector:
+
+```R
+> attributes(my_vector)
+$dim
+[1] 4 5
+```
+
+Esto nos dice que el vector tiene 4 filas y 5 columnas. 
+
+En el momento en el que el vector toma el atributo de **dimensión** se convierte en una matriz, lo podemos explorar así:
+
+```R
+> my_vector
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    1    5    9   13   17
+[2,]    2    6   10   14   18
+[3,]    3    7   11   15   19
+[4,]    4    8   12   16   20
+```
+
+Para observar la clase de objeto que es `my_vector` usamos la función `class()`:
+
+```R
+> class(my_vector)
+[1] "matrix" "array" 
+```
+
+Podemos concluir que **una matriz es un vector atómico con un atributo de dimensión**.
+
+## Creación de una matriz con `matrix()`
+
+Además de dar a un vector el atributo de dimensión, se puede crear una matriz con `matrix()`. La documentación nos dice lo siguiente sobre esa función para crear una matriz:
+
+```R
+matrix(data = NA, nrow = 1, ncol = 1, byrow = FALSE,
+       dimnames = NULL)
+```
+
+Esto quiere decir necesitamos `data`que será una secuencia de números `1:20`, `nrow`que es el número de filas y será `4`, por último `ncol` que es el número de columnas y será `5`:
+
+```R
+> my_matrix2 <- matrix(1:20, 4, 5)
+```
+
+Comprobaremos si `my_matrix2` es lo mismo que `my_matrix` (así almacenamos `my_vector`) con la función `identical()`:
+
+```R
+> identical(my_matrix, my_matrix2)
+[1] TRUE
+```
+
+## Creación de un data frame con `data.frame()`
+
+Imaginemos que nuestra tabla creada es sobre las mediciones que se le hicieron a unos pacientes, cada fila representa un paciente, y cada columna una variable de la que se tomaron medidas. 
+
+Es necesario etiquetar las filas para saber qué medida corresponde a qué paciente. Una manera poner los nombres es crear una columna a la izquierda con los nombres de los 4 pacientes:
+
+Comenzaremos creando un vector llamado `patients` que contenga el nombre de los pacientes, este será un vector de carácter y por lo tanto los nombres llevaran `""`: 
+
+```R
+> patients <- c("Bill", "Gina", "Kelly", "Sean")
+```
+
+Ahora usaremos la función `cbind()` que es _combine columns_, para unir los nombres con la matriz. Usaremos como argumentos el vector de `patients`y `my_matrix`:
+
+```R
+> cbind(patients, my_matrix)
+     patients                       
+[1,] "Bill"   "1" "5" "9"  "13" "17"
+[2,] "Gina"   "2" "6" "10" "14" "18"
+[3,] "Kelly"  "3" "7" "11" "15" "19"
+[4,] "Sean"   "4" "8" "12" "16" "20"
+```
+
+Debido a que la matriz solo puede contener un solo tipo de clase de datos, al agregar los que son caractéres (nombres de los pacientes) sucedió una **coerción** provocando que todos los objetos de la matriz se convirtieran en caractéres. Este tipo de coerción se conoce como `coerción implícita`ya que no se le pidió a R que lo hiciera.
+
+Para hacerlo de la forma adecuada es necesario entonces usar la función `data.frame()` dónde el primer argumento será `patients` y el segundo la matriz `my_matrix`:
+
+```R
+> my_data <- data.frame(patients, my_matrix)
+> my_data
+  patients X1 X2 X3 X4 X5
+1     Bill  1  5  9 13 17
+2     Gina  2  6 10 14 18
+3    Kelly  3  7 11 15 19
+4     Sean  4  8 12 16 20
+```
+
+La función `data.frame` toma cualquier número de argumentos y regresa un sólo objeto de la calse `data.frame` formado de los objetos originales.
+
+Comprobamos la clase de `my_data`:
+
+```R
+> class(my_data)
+[1] "data.frame"
+```
+
+Ahora nos resta asignar un nombre a las columnas para conocer el tipo de medición que representa cada columna. Empezando con crear un vector de carácter con los nombres de cada columna **en orden**:
+
+```R
+> cnames <- c("patient", "age", "weight", "bp", "rating", "test")
+```
+Ahora se usa la función `colnames()`para poner el atributo `colnames` de nuestro data frame:
+
+```R
+> colnames(my_data) <- cnames
+```
+
+Ahora podemos comprobar su contenido y ver como se agregaron los nombres de las columnas al data frame:
+
+```R
+> my_data
+  patient age weight bp rating test
+1    Bill   1      5  9     13   17
+2    Gina   2      6 10     14   18
+3   Kelly   3      7 11     15   19
+4    Sean   4      8 12     16   20
+```
