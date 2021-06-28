@@ -788,3 +788,5 @@ Ahora podemos comprobar su contenido y ver como se agregaron los nombres de las 
 3   Kelly   3      7 11     15   19
 4    Sean   4      8 12     16   20
 ```
+
+Continuar a semana 2
